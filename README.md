@@ -50,28 +50,27 @@ Câu hỏi: Bridgette mời 84 khách, Alex mời 2/3 số đó.
 ```
 ┌─────────────────────────────────────────────────────────┐
 │ 1. DATA CLEANING & DEDUP                                │
-│    95,400 mẫu → clean/dedup → 56,651 mẫu sạch         │
+│    95,400 mẫu → clean/dedup → 56,651 mẫu sạch           │
 ├─────────────────────────────────────────────────────────┤
 │ 2. ANSWER-ONLY TARGET                                   │
-│    Model CHỈ học sinh số "1200" thay vì lời giải dài   │
-│    Prompt: "Dạng: GSM\nBài toán: ...\nĐáp án là:"     │
+│    Model CHỈ học sinh số "1200" thay vì lời giải dài    │
+│    Prompt: "Dạng: GSM\nBài toán: ...\nĐáp án là:"       │
 ├─────────────────────────────────────────────────────────┤
 │ 3. LoRA FINE-TUNING                                     │
-│    Chỉ train 3.65% tham số (4.7M / 129M)              │
-│    r=32, α=64, LR=1e-3, 12 epochs trên 2×T4 GPU      │
+│    Chỉ train 3.65% tham số (4.7M / 129M)                │
+│    r=32, α=64, LR=1e-3, 12 epochs trên 2×T4 GPU         │
 ├─────────────────────────────────────────────────────────┤
 │ 4. CHECKPOINT SELECTION (trên official valid)           │
-│    Đánh giá 12 checkpoints × 1000 mẫu valid           │
-│    Best = epoch 11, checkpoint-9746 (5.643/10)         │
+│    Đánh giá 12 checkpoints × 1000 mẫu valid             │
+│    Best = epoch 11, checkpoint-9746 (5.643/10)          │
 ├─────────────────────────────────────────────────────────┤
 │ 5. NUMERIC CONSTRAINED DECODING                         │
-│    Ép model chỉ sinh token số → 100% extractable       │
+│    Ép model chỉ sinh token số → 100% extractable        │
 ├─────────────────────────────────────────────────────────┤
 │ 6. SAFE HYBRID RETRIEVAL                                │
 │    Source-group matching + type-aware gating            │
-│    Retrieval-first cho Rephrased/AnsAug                 │
-│    Model-first cho FOBAR/SV                             │
-│    Sửa 301/1000 câu → +0.243 điểm                     │
+│    Retrieval sửa 301/1000 câu → +0.243 điểm             │
+│    Sửa 301/1000 câu → +0.243 điểm                       │
 └─────────────────────────────────────────────────────────┘
 ```
 
@@ -251,9 +250,9 @@ Pipeline retrieval **bảo thủ** — chỉ can thiệp khi chắc chắn:
 - Build index từ train theo `source_group_key` (trường `original_question_en`)
 - **Retrieval-first** cho type ổn định: Rephrased, AnsAug — ghi đè model nếu majority ≥ 50%
 - **Model-first** cho type khó: FOBAR, SV — giữ model, chỉ override khi model agrees
-- Fallback tự động: nếu hybrid score ≤ model-only → dùng model-only
+- Fallback tự động: Dễ dàng sử dụng model-only hoặc dùng retrieval.
 
-**Kết quả:** Hybrid tăng 5.643 → 5.886 (+0.243), nên hệ thống chọn HYBRID làm output cuối.
+**Kết quả:** Hybrid tăng cho model-only từ 5.643 → 5.886 (+0.243), nên hệ thống chọn HYBRID làm output cuối. Nhưng mà do không được can thiệp vào các nguồn original của câu hỏi nên lúc chạy sẽ set up model only.
 
 ---
 
