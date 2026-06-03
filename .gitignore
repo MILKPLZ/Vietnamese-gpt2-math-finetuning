@@ -1,0 +1,29 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Model weights (too large for GitHub ~510MB)
+NlpHUSTgpt2-vietnamese/pytorch_model.bin
+
+# Dataset files (too large for GitHub ~220MB)
+dataset_math/train.json
+dataset_math/valid.json
+
+# Analysis files (generated)
+analyze_dataset.py
+giai_thich_pipeline_AZ.md
+gpt2_vietnamese_math_pipeline_v3_analysis.md
+phan_tich_dataset.md
+Report_GPT2_Math_Pipeline.md
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Gemini IDE
+.gemini/
