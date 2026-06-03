@@ -2,7 +2,7 @@
 
 Fine-tuning mô hình **GPT-2 Vietnamese** (124M params) để giải bài toán có lời văn bằng tiếng Việt, sử dụng pipeline hybrid: **Answer-Only LoRA + Checkpoint Selection + Hybrid Retrieval**.
 
-> **Kết quả:** 5.886 / 10 trên tập official validation 1,000 mẫu (model-only: 5.643).
+> **Kết quả:** 5.643 / 10 trên tập official validation 1,000 mẫu (retrieval: 5.886).
 
 ---
 
@@ -106,7 +106,7 @@ Vietnamese-gpt2-math-finetuning/
 - **GPU:** 2× NVIDIA T4 (hoặc tương đương, ≥16GB VRAM)
 - **RAM:** ≥16GB
 - **Python:** ≥ 3.10
-- **Thời gian chạy:** ~2h42m (training ~2h42m + checkpoint eval ~10m + inference ~1m)
+- **Thời gian chạy:** ~2h52m (training ~2h42m + checkpoint eval ~10m + inference ~1m)
 
 ### Bước 1: Clone repo
 
@@ -205,17 +205,6 @@ Mở `fine-tune-gpt-2-for-math.ipynb` trên **Kaggle** (khuyến nghị) hoặc 
 | **11** | **checkpoint-9746** | **5.643** ⭐ | **539** |
 | 12 | checkpoint-10632 | 5.631 | 537 |
 
-### Retrieval breakdown
-
-| Nhóm | N | Ý nghĩa |
-|---|---:|---|
-| Retrieval used (hybrid) | 301 | Câu được retrieval sửa/xác nhận |
-| model_agrees_with_retrieval | 274 | Model và retrieval đồng ý |
-| retrieval_first_override (Rephrased) | 27 | Retrieval ghi đè cho type stable |
-| model_first_no_override (FOBAR/SV) | 146 | Giữ model cho type khó |
-| no_same_type_pool | 464 | Không tìm được candidates cùng type |
-| source_unseen | 49 | Bài gốc chưa thấy trong train |
-
 ### Training metrics
 
 | Metric | Giá trị |
@@ -252,7 +241,7 @@ Pipeline retrieval **bảo thủ** — chỉ can thiệp khi chắc chắn:
 - **Model-first** cho type khó: FOBAR, SV — giữ model, chỉ override khi model agrees
 - Fallback tự động: Dễ dàng sử dụng model-only hoặc dùng retrieval.
 
-**Kết quả:** Hybrid tăng cho model-only từ 5.643 → 5.886 (+0.243), nên hệ thống chọn HYBRID làm output cuối. Nhưng mà do không được can thiệp vào các nguồn original của câu hỏi nên lúc chạy sẽ set up model only.
+**Kết quả:** Hybrid tăng cho model-only từ 5.643 → 5.886 (+0.243). Nhưng mà do không được can thiệp vào các nguồn original của câu hỏi nên lúc chạy sẽ set up model only.
 
 ---
 
